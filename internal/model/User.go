@@ -29,3 +29,8 @@ type CreateUser struct {
 	Cellphone string
 	Birthday  string
 }
+
+type LoginUser struct {
+	Email    string
+	Password string
+}
