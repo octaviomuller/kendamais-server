@@ -8,7 +8,10 @@ import (
 	"github.com/joho/godotenv"
 	server "github.com/octaviomuller/kendamais-server/internal"
 	"github.com/octaviomuller/kendamais-server/internal/config"
+	"github.com/octaviomuller/kendamais-server/internal/controller"
+	"github.com/octaviomuller/kendamais-server/internal/database"
 	"github.com/octaviomuller/kendamais-server/internal/routes"
+	"github.com/octaviomuller/kendamais-server/internal/service"
 )
 
 var connectionString string
@@ -30,7 +33,9 @@ func main() {
 
 	db := config.ConnectDB(connectionString)
 
-	server := server.NewServer(engine, db)
+	userController := controller.NewUserController(service.NewUserService(database.NewUserRepository(db)))
+
+	server := server.NewServer(engine, db, *userController)
 	routes.SetupRouter(server)
 
 	server.Run()

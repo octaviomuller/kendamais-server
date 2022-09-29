@@ -19,3 +19,13 @@ type User struct {
 	UpdatedAt *time.Time     `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `json:"deletedAt"`
 }
+
+type CreateUser struct {
+	Email     string
+	Password  string
+	Name      string
+	Cpf       string
+	Cnpj      string
+	Cellphone string
+	Birthday  string
+}
