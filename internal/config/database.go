@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/octaviomuller/kendamais-server/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,7 +20,7 @@ func GetDB() *gorm.DB {
 }
 
 func RunMigrationsDB() (err error) {
-	err = db.AutoMigrate()
+	err = db.AutoMigrate(model.User{})
 	if err != nil {
 		return err
 	}
