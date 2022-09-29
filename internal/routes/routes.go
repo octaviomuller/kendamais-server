@@ -10,6 +10,7 @@ func SetupRouter(server *server.Server) {
 		user := router.Group("/user")
 		{
 			user.POST("/", server.UserController.Post)
+			user.POST("/login", server.UserController.Login)
 		}
 	}
 }

@@ -72,3 +72,32 @@ func (p *UserController) Post(ctx *gin.Context) {
 
 	return
 }
+
+func (p *UserController) Login(ctx *gin.Context) {
+	body := &model.LoginUser{}
+
+	err := ctx.BindJSON(body)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+
+		return
+	}
+
+	email := body.Email
+	password := body.Password
+
+	user, err := p.userService.Login(email, password)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+
+	return
+}

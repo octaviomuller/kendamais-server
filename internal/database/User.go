@@ -23,3 +23,14 @@ func (p *UserRepository) Create(user *model.User) error {
 
 	return nil
 }
+
+func (p *UserRepository) Get(user *model.User) (*model.User, error) {
+	result := &model.User{}
+
+	tx := p.db.Where(user).First(result)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return result, nil
+}

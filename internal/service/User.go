@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/octaviomuller/kendamais-server/internal/interfaces"
@@ -22,10 +21,13 @@ func NewUserService(userRepository interfaces.UserRepository) *UserService {
 }
 
 func (p *UserService) Create(email string, password string, name string, cpf *string, cnpj *string, cellphone string, birthday *time.Time) error {
-	fmt.Println(email, password, name, cpf, cnpj, cellphone, birthday)
-
 	if email == "" || password == "" || name == "" || cellphone == "" || birthday == nil {
-		return errors.New("Required fields missing!")
+		return errors.New("Required fields missing")
+	}
+
+	foundUser, err := p.userRepository.Get(&model.User{Email: email})
+	if foundUser != nil {
+		return errors.New("Email unavailable")
 	}
 
 	if (*birthday).After(time.Now().AddDate(-18, 0, 0)) {
@@ -49,10 +51,28 @@ func (p *UserService) Create(email string, password string, name string, cpf *st
 		Birthday:  birthday,
 	}
 
-	err := p.userRepository.Create(user)
+	err = p.userRepository.Create(user)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (p *UserService) Login(email string, password string) (*model.User, error) {
+	if email == "" || password == "" {
+		return nil, errors.New("Required fields missing")
+	}
+
+	user, err := p.userRepository.Get(&model.User{Email: email})
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return nil, errors.New("Wrong password")
+	}
+
+	return user, nil
 }
