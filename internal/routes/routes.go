@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	server "github.com/octaviomuller/kendamais-server/internal"
 )
@@ -15,4 +16,6 @@ func SetupRouter(server *server.Server) {
 			return
 		})
 	}
+
+	router.Use(cors.Default())
 }
