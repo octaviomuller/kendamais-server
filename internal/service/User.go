@@ -77,6 +77,19 @@ func (p *UserService) Login(email string, password string) (*model.User, error) 
 	return user, nil
 }
 
+func (p *UserService) Get(id string) (*model.User, error) {
+	if id == "" {
+		return nil, errors.New("Id not specified")
+	}
+
+	user, err := p.userRepository.Get(&model.User{Id: id})
+	if err != nil || user == nil {
+		return nil, errors.New("User not found")
+	}
+
+	return user, nil
+}
+
 func (p *UserService) Update(id, email, name, cellphone string, cpf, cnpj *string) error {
 	if id == "" {
 		return errors.New("Id not specified")

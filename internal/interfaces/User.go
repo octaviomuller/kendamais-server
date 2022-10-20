@@ -9,6 +9,7 @@ import (
 type UserService interface {
 	Create(email, password, name, cellphone string, cpf, cnpj *string, birthday *time.Time) error
 	Login(email, password string) (*model.User, error)
+	Get(id string) (*model.User, error)
 	Update(id, email, name, cellphone string, cpf, cnpj *string) error
 }
 

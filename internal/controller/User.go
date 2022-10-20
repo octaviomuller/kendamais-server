@@ -78,7 +78,6 @@ func (p *UserController) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid request body",
 		})
-
 		return
 	}
 
@@ -90,7 +89,22 @@ func (p *UserController) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
+	}
 
+	ctx.JSON(http.StatusOK, user)
+
+	return
+}
+
+func (p *UserController) Get(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	user, err := p.userService.Get(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
 		return
 	}
 

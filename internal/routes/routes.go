@@ -11,6 +11,7 @@ func SetupRouter(server *server.Server) {
 		{
 			user.POST("/", server.UserController.Post)
 			user.POST("/login", server.UserController.Login)
+			user.GET("/:id", server.UserController.Get)
 			user.PATCH("/:id", server.UserController.Patch)
 		}
 	}
