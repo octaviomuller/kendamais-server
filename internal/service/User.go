@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"time"
 
 	"github.com/octaviomuller/kendamais-server/internal/interfaces"
 	"github.com/octaviomuller/kendamais-server/internal/model"
@@ -20,18 +19,14 @@ func NewUserService(userRepository interfaces.UserRepository) *UserService {
 	}
 }
 
-func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj *string, birthday *time.Time) error {
-	if email == "" || password == "" || name == "" || cellphone == "" || birthday == nil {
+func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj *string) error {
+	if email == "" || password == "" || name == "" || cellphone == "" {
 		return errors.New("Required fields missing")
 	}
 
 	foundUser, err := p.userRepository.Get(&model.User{Email: email})
 	if foundUser != nil {
 		return errors.New("Email unavailable")
-	}
-
-	if (*birthday).After(time.Now().AddDate(-18, 0, 0)) {
-		return errors.New("Users must be 18 years or older")
 	}
 
 	if cpf == nil && cnpj == nil {
@@ -48,7 +43,6 @@ func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj 
 		Cpf:       cpf,
 		Cnpj:      cnpj,
 		Cellphone: cellphone,
-		Birthday:  birthday,
 	}
 
 	err = p.userRepository.Create(user)
