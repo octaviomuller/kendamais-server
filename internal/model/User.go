@@ -34,3 +34,11 @@ type LoginUser struct {
 	Email    string
 	Password string
 }
+
+type UpdateUser struct {
+	Email     string
+	Name      string
+	Cpf       string
+	Cnpj      string
+	Cellphone string
+}

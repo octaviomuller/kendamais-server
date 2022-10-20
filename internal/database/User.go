@@ -34,3 +34,12 @@ func (p *UserRepository) Get(user *model.User) (*model.User, error) {
 
 	return result, nil
 }
+
+func (p *UserRepository) Update(user *model.User) error {
+	tx := p.db.Save(user)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}

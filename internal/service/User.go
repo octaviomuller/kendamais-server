@@ -20,7 +20,7 @@ func NewUserService(userRepository interfaces.UserRepository) *UserService {
 	}
 }
 
-func (p *UserService) Create(email string, password string, name string, cpf *string, cnpj *string, cellphone string, birthday *time.Time) error {
+func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj *string, birthday *time.Time) error {
 	if email == "" || password == "" || name == "" || cellphone == "" || birthday == nil {
 		return errors.New("Required fields missing")
 	}
@@ -75,4 +75,38 @@ func (p *UserService) Login(email string, password string) (*model.User, error) 
 	}
 
 	return user, nil
+}
+
+func (p *UserService) Update(id, email, name, cellphone string, cpf, cnpj *string) error {
+	if id == "" {
+		return errors.New("Id not specified")
+	}
+
+	user, err := p.userRepository.Get(&model.User{Id: id})
+	if err != nil || user == nil {
+		return errors.New("User not found")
+	}
+
+	if email != "" {
+		user.Email = email
+	}
+	if name != "" {
+		user.Name = name
+	}
+	if cellphone != "" {
+		user.Cellphone = cellphone
+	}
+	if cpf != nil {
+		user.Cpf = cpf
+	}
+	if cnpj != nil {
+		user.Cnpj = cnpj
+	}
+
+	err = p.userRepository.Update(user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
