@@ -18,10 +18,11 @@ var connectionString string
 
 func getEnv() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("No .env file found")
+		log.Println("No .env file found")
 	}
 
 	connectionString = os.Getenv("POSTGRE_URI")
+	log.Println("connectionString: ", connectionString)
 	if connectionString == "" {
 		log.Fatal("You must set your 'POSTGRE_URI' env variable.")
 	}
