@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"time"
 
 	"github.com/octaviomuller/kendamais-server/internal/interfaces"
 	"github.com/octaviomuller/kendamais-server/internal/model"
@@ -20,18 +19,14 @@ func NewUserService(userRepository interfaces.UserRepository) *UserService {
 	}
 }
 
-func (p *UserService) Create(email string, password string, name string, cpf *string, cnpj *string, cellphone string, birthday *time.Time) error {
-	if email == "" || password == "" || name == "" || cellphone == "" || birthday == nil {
+func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj *string) error {
+	if email == "" || password == "" || name == "" || cellphone == "" {
 		return errors.New("Required fields missing")
 	}
 
 	foundUser, err := p.userRepository.Get(&model.User{Email: email})
 	if foundUser != nil {
 		return errors.New("Email unavailable")
-	}
-
-	if (*birthday).After(time.Now().AddDate(-18, 0, 0)) {
-		return errors.New("Users must be 18 years or older")
 	}
 
 	if cpf == nil && cnpj == nil {
@@ -48,7 +43,6 @@ func (p *UserService) Create(email string, password string, name string, cpf *st
 		Cpf:       cpf,
 		Cnpj:      cnpj,
 		Cellphone: cellphone,
-		Birthday:  birthday,
 	}
 
 	err = p.userRepository.Create(user)
@@ -75,4 +69,51 @@ func (p *UserService) Login(email string, password string) (*model.User, error) 
 	}
 
 	return user, nil
+}
+
+func (p *UserService) Get(id string) (*model.User, error) {
+	if id == "" {
+		return nil, errors.New("Id not specified")
+	}
+
+	user, err := p.userRepository.Get(&model.User{Id: id})
+	if err != nil || user == nil {
+		return nil, errors.New("User not found")
+	}
+
+	return user, nil
+}
+
+func (p *UserService) Update(id, email, name, cellphone string, cpf, cnpj *string) error {
+	if id == "" {
+		return errors.New("Id not specified")
+	}
+
+	user, err := p.userRepository.Get(&model.User{Id: id})
+	if err != nil || user == nil {
+		return errors.New("User not found")
+	}
+
+	if email != "" {
+		user.Email = email
+	}
+	if name != "" {
+		user.Name = name
+	}
+	if cellphone != "" {
+		user.Cellphone = cellphone
+	}
+	if cpf != nil {
+		user.Cpf = cpf
+	}
+	if cnpj != nil {
+		user.Cnpj = cnpj
+	}
+
+	err = p.userRepository.Update(user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

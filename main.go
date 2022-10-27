@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	server "github.com/octaviomuller/kendamais-server/internal"
@@ -30,6 +31,8 @@ func getEnv() {
 
 func main() {
 	engine := gin.Default()
+	engine.Use(cors.Default())
+
 	getEnv()
 
 	db := config.ConnectDB(connectionString)
