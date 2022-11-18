@@ -18,7 +18,7 @@ func NewUserController(userService interfaces.UserService) *UserController {
 	}
 }
 
-func (p *UserController) Post(ctx *gin.Context) {
+func (p *UserController) PostUser(ctx *gin.Context) {
 	body := model.CreateUser{}
 
 	err := ctx.BindJSON(&body)
@@ -86,7 +86,7 @@ func (p *UserController) Login(ctx *gin.Context) {
 	return
 }
 
-func (p *UserController) Get(ctx *gin.Context) {
+func (p *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	user, err := p.userService.Get(id)
@@ -102,7 +102,7 @@ func (p *UserController) Get(ctx *gin.Context) {
 	return
 }
 
-func (p *UserController) Patch(ctx *gin.Context) {
+func (p *UserController) PatchUser(ctx *gin.Context) {
 	body := model.UpdateUser{}
 
 	err := ctx.BindJSON(&body)
