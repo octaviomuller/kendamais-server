@@ -13,8 +13,8 @@ type Bidding struct {
 	MinimumValue float64        `json:"minimumValue"`
 	BidValue     float64        `json:"bidValue"`
 	LastBidValue float64        `json:"lastBidValue"`
-	LastBidUser  *User          `json:"lastBidUser"`
-	CreatedBy    User           `json:"createdBy"`
+	LastBidUser  *string        `json:"lastBidUser"`
+	CreatedBy    string         `json:"createdBy"`
 	DueDate      *time.Time     `json:"dueDate"`
 	CreatedAt    *time.Time     `json:"createdAt"`
 	UpdatedAt    *time.Time     `json:"updatedAt"`
@@ -27,5 +27,5 @@ type CreateBidding struct {
 	MinimumValue float64
 	BidValue     float64
 	CreatedBy    string
-	DueDate      *time.Time
+	DueDate      string
 }

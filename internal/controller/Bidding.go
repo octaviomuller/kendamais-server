@@ -12,7 +12,7 @@ type BiddingController struct {
 	biddingService interfaces.BiddingService
 }
 
-func NewBiddinController(biddingService interfaces.BiddingService) *BiddingController {
+func NewBiddingController(biddingService interfaces.BiddingService) *BiddingController {
 	return &BiddingController{
 		biddingService: biddingService,
 	}

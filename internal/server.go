@@ -7,16 +7,18 @@ import (
 )
 
 type Server struct {
-	Engine         *gin.Engine
-	DB             *gorm.DB
-	UserController controller.UserController
+	Engine            *gin.Engine
+	DB                *gorm.DB
+	UserController    controller.UserController
+	BiddingController controller.BiddingController
 }
 
-func NewServer(engine *gin.Engine, db *gorm.DB, userController controller.UserController) *Server {
+func NewServer(engine *gin.Engine, db *gorm.DB, userController controller.UserController, biddingController controller.BiddingController) *Server {
 	return &Server{
-		Engine:         engine,
-		DB:             db,
-		UserController: userController,
+		Engine:            engine,
+		DB:                db,
+		UserController:    userController,
+		BiddingController: biddingController,
 	}
 }
 

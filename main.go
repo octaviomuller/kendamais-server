@@ -38,8 +38,9 @@ func main() {
 	db := config.ConnectDB(connectionString)
 
 	userController := controller.NewUserController(service.NewUserService(database.NewUserRepository(db)))
+	biddingController := controller.NewBiddingController(service.NewBiddingService(database.NewUserRepository(db), database.NewBiddingRepository(db)))
 
-	server := server.NewServer(engine, db, *userController)
+	server := server.NewServer(engine, db, *userController, *biddingController)
 	routes.SetupRouter(server)
 
 	server.Run()

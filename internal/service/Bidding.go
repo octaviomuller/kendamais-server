@@ -2,50 +2,51 @@ package service
 
 import (
 	"errors"
+	"time"
 
 	"github.com/octaviomuller/kendamais-server/internal/interfaces"
 	"github.com/octaviomuller/kendamais-server/internal/model"
 	uuid "github.com/satori/go.uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type BiddingService struct {
+	userRepository    interfaces.UserRepository
 	biddingRepository interfaces.BiddingRepository
 }
 
-func NewBiddingService(biddingRepository interfaces.BiddingRepository) *BiddingService {
+func NewBiddingService(userRepository interfaces.UserRepository, biddingRepository interfaces.BiddingRepository) *BiddingService {
 	return &BiddingService{
+		userRepository:    userRepository,
 		biddingRepository: biddingRepository,
 	}
 }
 
 func (p *BiddingService) CreateBidding(title, description string, minimumValue, bidValue float64, dueDate string, createdBy string) error {
-	if title == "" || description == "" || minimumValue == nil || bidValue == nil || dueDate == "" || createdBy == "" {
+	if title == "" || description == "" || minimumValue == 0 || bidValue == 0 || dueDate == "" || createdBy == "" {
 		return errors.New("Required fields missing")
 	}
 
-	foundBidding, err := p.biddingRepository.Get(&model.Bidding{Email: email})
-	if foundBidding != nil {
-		return errors.New("Email unavailable")
+	user, err := p.userRepository.GetUser(&model.User{Id: createdBy})
+	if user == nil || err != nil {
+		return errors.New("User not found")
 	}
 
-	if cpf == nil && cnpj == nil {
-		return errors.New("Bidding must have cpf or cnpj")
+	dueDateParsed, err := time.Parse("2006-01-02", dueDate)
+	if err != nil {
+		return err
 	}
-
-	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), 8)
 
 	bidding := &model.Bidding{
-		Id:        uuid.NewV4().String(),
-		Email:     email,
-		Password:  string(hashed),
-		Name:      name,
-		Cpf:       cpf,
-		Cnpj:      cnpj,
-		Cellphone: cellphone,
+		Id:           uuid.NewV4().String(),
+		Title:        title,
+		Description:  description,
+		MinimumValue: minimumValue,
+		BidValue:     bidValue,
+		DueDate:      &dueDateParsed,
+		CreatedBy:    user.Id,
 	}
 
-	err = p.biddingRepository.Create(bidding)
+	err = p.biddingRepository.CreateBidding(bidding)
 	if err != nil {
 		return err
 	}
