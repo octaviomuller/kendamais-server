@@ -38,7 +38,7 @@ func (p *BiddingRepository) GetBidding(bidding *model.Bidding) (*model.Bidding, 
 func (p *BiddingRepository) ListBiddings() ([]*model.Bidding, error) {
 	result := []*model.Bidding{}
 
-	tx := p.db.Find(result)
+	tx := p.db.Find(&result)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
