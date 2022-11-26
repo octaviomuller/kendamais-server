@@ -18,6 +18,11 @@ func SetupRouter(server *server.Server) {
 		bidding := router.Group("/bidding")
 		{
 			bidding.POST("/", server.BiddingController.PostBidding)
+			bidding.PATCH("/:id", server.BiddingController.PatchBidding)
+			bidding.POST("/:id", server.BiddingController.PostBid)
+			bidding.GET("/:id", server.BiddingController.GetBidding)
+			bidding.GET("/", server.BiddingController.ListBiddings)
+			bidding.DELETE("/:id", server.BiddingController.DeleteBidding)
 		}
 	}
 }

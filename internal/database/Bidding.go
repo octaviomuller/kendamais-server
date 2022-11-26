@@ -23,3 +23,43 @@ func (p *BiddingRepository) CreateBidding(bidding *model.Bidding) error {
 
 	return nil
 }
+
+func (p *BiddingRepository) GetBidding(bidding *model.Bidding) (*model.Bidding, error) {
+	result := &model.Bidding{}
+
+	tx := p.db.Where(bidding).First(result)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return result, nil
+}
+
+func (p *BiddingRepository) ListBiddings() ([]*model.Bidding, error) {
+	result := []*model.Bidding{}
+
+	tx := p.db.Find(result)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return result, nil
+}
+
+func (p *BiddingRepository) UpdateBidding(bidding *model.Bidding) error {
+	tx := p.db.Save(bidding)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}
+
+func (p *BiddingRepository) DeleteBidding(bidding *model.Bidding) error {
+	tx := p.db.Delete(bidding)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}

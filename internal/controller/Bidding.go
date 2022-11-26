@@ -50,3 +50,113 @@ func (p *BiddingController) PostBidding(ctx *gin.Context) {
 
 	return
 }
+
+func (p *BiddingController) PatchBidding(ctx *gin.Context) {
+	id := ctx.Params.ByName("id")
+	body := model.UpdateBidding{}
+
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	title := body.Title
+	description := body.Description
+	minimumValue := body.MinimumValue
+	dueDate := body.DueDate
+
+	err = p.biddingService.UpdateBidding(id, title, description, minimumValue, dueDate)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Bidding updated with success",
+	})
+
+	return
+}
+
+func (p *BiddingController) PostBid(ctx *gin.Context) {
+	id := ctx.Params.ByName("id")
+	body := model.MakeBid{}
+
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	userId := body.UserId
+	value := body.Value
+
+	err = p.biddingService.MakeBid(id, userId, value)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Bid posted with success",
+	})
+
+	return
+}
+
+func (p *BiddingController) GetBidding(ctx *gin.Context) {
+	id := ctx.Params.ByName("id")
+
+	bidding, err := p.biddingService.GetBidding(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, bidding)
+
+	return
+}
+
+func (p *BiddingController) ListBiddings(ctx *gin.Context) {
+	biddings, err := p.biddingService.ListBiddings()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, biddings)
+
+	return
+}
+
+func (p *BiddingController) DeleteBidding(ctx *gin.Context) {
+	id := ctx.Params.ByName("id")
+
+	err := p.biddingService.DeleteBidding(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Bidding deleted with success",
+	})
+
+	return
+}
