@@ -9,7 +9,7 @@ func SetupRouter(server *server.Server) {
 	{
 		user := router.Group("/user")
 		{
-			user.POST("", server.UserController.PostUser)
+			user.POST("/", server.UserController.PostUser)
 			user.POST("/login", server.UserController.Login)
 			user.GET("/:id", server.UserController.GetUser)
 			user.PATCH("/:id", server.UserController.PatchUser)
@@ -21,7 +21,7 @@ func SetupRouter(server *server.Server) {
 			bidding.PATCH("/:id", server.BiddingController.PatchBidding)
 			bidding.POST("/:id", server.BiddingController.PostBid)
 			bidding.GET("/:id", server.BiddingController.GetBidding)
-			bidding.GET("", server.BiddingController.ListBiddings)
+			bidding.GET("/", server.BiddingController.ListBiddings)
 			bidding.DELETE("/:id", server.BiddingController.DeleteBidding)
 		}
 	}

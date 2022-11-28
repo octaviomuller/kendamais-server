@@ -31,6 +31,11 @@ func getEnv() {
 
 func main() {
 	engine := gin.Default()
+	corsConfig := cors.DefaultConfig()
+
+	corsConfig.AllowCredentials = true
+	corsConfig.AddAllowMethods("OPTIONS")
+
 	engine.Use(cors.Default())
 
 	getEnv()
