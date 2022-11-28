@@ -18,7 +18,7 @@ func NewUserController(userService interfaces.UserService) *UserController {
 	}
 }
 
-func (p *UserController) Post(ctx *gin.Context) {
+func (p *UserController) PostUser(ctx *gin.Context) {
 	body := model.CreateUser{}
 
 	err := ctx.BindJSON(&body)
@@ -44,7 +44,7 @@ func (p *UserController) Post(ctx *gin.Context) {
 		cnpj = nil
 	}
 
-	err = p.userService.Create(email, password, name, cellphone, cpf, cnpj)
+	err = p.userService.CreateUser(email, password, name, cellphone, cpf, cnpj)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -86,10 +86,10 @@ func (p *UserController) Login(ctx *gin.Context) {
 	return
 }
 
-func (p *UserController) Get(ctx *gin.Context) {
+func (p *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	user, err := p.userService.Get(id)
+	user, err := p.userService.GetUser(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid request body",
@@ -102,7 +102,7 @@ func (p *UserController) Get(ctx *gin.Context) {
 	return
 }
 
-func (p *UserController) Patch(ctx *gin.Context) {
+func (p *UserController) PatchUser(ctx *gin.Context) {
 	body := model.UpdateUser{}
 
 	err := ctx.BindJSON(&body)
@@ -127,7 +127,7 @@ func (p *UserController) Patch(ctx *gin.Context) {
 		cnpj = nil
 	}
 
-	err = p.userService.Update(id, email, name, cellphone, cpf, cnpj)
+	err = p.userService.UpdateUser(id, email, name, cellphone, cpf, cnpj)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),

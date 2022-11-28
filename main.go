@@ -31,15 +31,22 @@ func getEnv() {
 
 func main() {
 	engine := gin.Default()
-	engine.Use(cors.Default())
+	corsConfig := cors.DefaultConfig()
+
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowCredentials = true
+	corsConfig.AddAllowHeaders("authorization")
+
+	engine.Use(cors.New(corsConfig))
 
 	getEnv()
 
 	db := config.ConnectDB(connectionString)
 
 	userController := controller.NewUserController(service.NewUserService(database.NewUserRepository(db)))
+	biddingController := controller.NewBiddingController(service.NewBiddingService(database.NewUserRepository(db), database.NewBiddingRepository(db)))
 
-	server := server.NewServer(engine, db, *userController)
+	server := server.NewServer(engine, db, *userController, *biddingController)
 	routes.SetupRouter(server)
 
 	server.Run()

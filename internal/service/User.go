@@ -19,12 +19,12 @@ func NewUserService(userRepository interfaces.UserRepository) *UserService {
 	}
 }
 
-func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj *string) error {
+func (p *UserService) CreateUser(email, password, name, cellphone string, cpf, cnpj *string) error {
 	if email == "" || password == "" || name == "" || cellphone == "" {
 		return errors.New("Required fields missing")
 	}
 
-	foundUser, err := p.userRepository.Get(&model.User{Email: email})
+	foundUser, err := p.userRepository.GetUser(&model.User{Email: email})
 	if foundUser != nil {
 		return errors.New("Email unavailable")
 	}
@@ -45,7 +45,7 @@ func (p *UserService) Create(email, password, name, cellphone string, cpf, cnpj 
 		Cellphone: cellphone,
 	}
 
-	err = p.userRepository.Create(user)
+	err = p.userRepository.CreateUser(user)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (p *UserService) Login(email string, password string) (*model.User, error) 
 		return nil, errors.New("Required fields missing")
 	}
 
-	user, err := p.userRepository.Get(&model.User{Email: email})
+	user, err := p.userRepository.GetUser(&model.User{Email: email})
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +71,12 @@ func (p *UserService) Login(email string, password string) (*model.User, error) 
 	return user, nil
 }
 
-func (p *UserService) Get(id string) (*model.User, error) {
+func (p *UserService) GetUser(id string) (*model.User, error) {
 	if id == "" {
 		return nil, errors.New("Id not specified")
 	}
 
-	user, err := p.userRepository.Get(&model.User{Id: id})
+	user, err := p.userRepository.GetUser(&model.User{Id: id})
 	if err != nil || user == nil {
 		return nil, errors.New("User not found")
 	}
@@ -84,12 +84,12 @@ func (p *UserService) Get(id string) (*model.User, error) {
 	return user, nil
 }
 
-func (p *UserService) Update(id, email, name, cellphone string, cpf, cnpj *string) error {
+func (p *UserService) UpdateUser(id, email, name, cellphone string, cpf, cnpj *string) error {
 	if id == "" {
 		return errors.New("Id not specified")
 	}
 
-	user, err := p.userRepository.Get(&model.User{Id: id})
+	user, err := p.userRepository.GetUser(&model.User{Id: id})
 	if err != nil || user == nil {
 		return errors.New("User not found")
 	}
@@ -110,7 +110,7 @@ func (p *UserService) Update(id, email, name, cellphone string, cpf, cnpj *strin
 		user.Cnpj = cnpj
 	}
 
-	err = p.userRepository.Update(user)
+	err = p.userRepository.UpdateUser(user)
 	if err != nil {
 		return err
 	}

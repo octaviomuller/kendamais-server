@@ -15,7 +15,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
-func (p *UserRepository) Create(user *model.User) error {
+func (p *UserRepository) CreateUser(user *model.User) error {
 	tx := p.db.Create(user)
 	if tx.Error != nil {
 		return tx.Error
@@ -24,7 +24,7 @@ func (p *UserRepository) Create(user *model.User) error {
 	return nil
 }
 
-func (p *UserRepository) Get(user *model.User) (*model.User, error) {
+func (p *UserRepository) GetUser(user *model.User) (*model.User, error) {
 	result := &model.User{}
 
 	tx := p.db.Where(user).First(result)
@@ -35,7 +35,7 @@ func (p *UserRepository) Get(user *model.User) (*model.User, error) {
 	return result, nil
 }
 
-func (p *UserRepository) Update(user *model.User) error {
+func (p *UserRepository) UpdateUser(user *model.User) error {
 	tx := p.db.Save(user)
 	if tx.Error != nil {
 		return tx.Error

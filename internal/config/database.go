@@ -20,7 +20,7 @@ func GetDB() *gorm.DB {
 }
 
 func RunMigrationsDB() (err error) {
-	err = db.AutoMigrate(model.User{})
+	err = db.AutoMigrate(model.User{}, model.Bidding{})
 	if err != nil {
 		return err
 	}
