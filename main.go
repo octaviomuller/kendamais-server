@@ -33,10 +33,11 @@ func main() {
 	engine := gin.Default()
 	corsConfig := cors.DefaultConfig()
 
+	corsConfig.AllowAllOrigins = true
 	corsConfig.AllowCredentials = true
-	corsConfig.AddAllowMethods("OPTIONS")
+	corsConfig.AddAllowHeaders("authorization")
 
-	engine.Use(cors.Default())
+	engine.Use(cors.New(corsConfig))
 
 	getEnv()
 
